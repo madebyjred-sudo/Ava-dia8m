@@ -1,0 +1,244 @@
+[
+  {
+    "id": 11,
+    "name": "3 rosas decoradas",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "3 rosas decoradas"
+    ],
+    "price": 25,
+    "image": "/products/product-11.png"
+  },
+  {
+    "id": 14,
+    "name": "1girasol decorado",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "1girasol decorado"
+    ],
+    "price": 30,
+    "image": "/products/product-14.png"
+  },
+  {
+    "id": 15,
+    "name": "1girasol, 4rosas y follaje",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "1girasol, 4rosas y follaje"
+    ],
+    "price": 50,
+    "image": "/products/product-15.png"
+  },
+  {
+    "id": 16,
+    "name": "4rosas, 2girasoles y follaje",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "4rosas, 2girasoles y follaje"
+    ],
+    "price": 65,
+    "image": "/products/product-16.png"
+  },
+  {
+    "id": 17,
+    "name": "9rosas y follaje",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "9rosas y follaje"
+    ],
+    "price": 70,
+    "image": "/products/product-17.png"
+  },
+  {
+    "id": 18,
+    "name": "1girasol y 6rosas",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "1girasol y 6rosas"
+    ],
+    "price": 75,
+    "image": "/products/product-18.png"
+  },
+  {
+    "id": 19,
+    "name": "Astromelias, rosas, lirios y follaje",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "Astromelias, rosas, lirios y follaje"
+    ],
+    "price": 80,
+    "image": "/products/product-19.png"
+  },
+  {
+    "id": 20,
+    "name": "Ramillete 3girasoles, yipso y eucalipto",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "Ramillete 3girasoles, yipso y eucalipto"
+    ],
+    "price": 80,
+    "image": "/products/product-20.png"
+  },
+  {
+    "id": 21,
+    "name": "12rosas y yipso",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "12rosas y yipso"
+    ],
+    "price": 85,
+    "image": "/products/product-21.png"
+  },
+  {
+    "id": 22,
+    "name": "Virgen mediana, ferrerox4 y un sinvidio",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "Virgen mediana, ferrerox4 y un sinvidio"
+    ],
+    "price": 90,
+    "image": "/products/product-22.png"
+  },
+  {
+    "id": 1,
+    "name": "1girasol y 12rosas",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "1girasol y 12rosas"
+    ],
+    "price": 100,
+    "image": "/products/product-1.png"
+  },
+  {
+    "id": 2,
+    "name": "1girasol y 12rosas",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "1girasol y 12rosas"
+    ],
+    "price": 100,
+    "image": "/products/product-2.png"
+  },
+  {
+    "id": 3,
+    "name": "12rosas y ferrero x8",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "12rosas y ferrero x8"
+    ],
+    "price": 120,
+    "image": "/products/product-3.png"
+  },
+  {
+    "id": 4,
+    "name": "5rosas, 1girasol, ferrerox4, peluche20cm",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "5rosas, 1girasol, ferrerox4, peluche20cm"
+    ],
+    "price": 120,
+    "image": "/products/product-4.png"
+  },
+  {
+    "id": 5,
+    "name": "12rosas con follaje",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "12rosas con follaje"
+    ],
+    "price": 140,
+    "image": "/products/product-5.png"
+  },
+  {
+    "id": 6,
+    "name": "15rosas y 3 varas de lirios",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "15rosas y 3 varas de lirios"
+    ],
+    "price": 150,
+    "image": "/products/product-6.png"
+  },
+  {
+    "id": 7,
+    "name": "24 rosas y mensaje personalizado",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "24 rosas y mensaje personalizado"
+    ],
+    "price": 150,
+    "image": "/products/product-7.png"
+  },
+  {
+    "id": 8,
+    "name": "24rosas",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "24rosas"
+    ],
+    "price": 160,
+    "image": "/products/product-8.png"
+  },
+  {
+    "id": 9,
+    "name": "24rosas 6fresas cubiertas de chocolate",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "24rosas 6fresas cubiertas de chocolate"
+    ],
+    "price": 190,
+    "image": "/products/product-9.png"
+  },
+  {
+    "id": 10,
+    "name": "10girasoles y follaje",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "10girasoles y follaje"
+    ],
+    "price": 200,
+    "image": "/products/product-10.png"
+  },
+  {
+    "id": 12,
+    "name": "24rosas, peluche30cm y ferrerox8",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "24rosas, peluche30cm y ferrerox8"
+    ],
+    "price": 250,
+    "image": "/products/product-12.png"
+  },
+  {
+    "id": 13,
+    "name": "8girasoles y 12rosas + globo persoalizado",
+    "category": "Colección Día de la Mujer",
+    "description": "",
+    "flowers": [
+      "8girasoles y 12rosas + globo persoalizado"
+    ],
+    "price": 280,
+    "image": "/products/product-13.png"
+  }
+]
