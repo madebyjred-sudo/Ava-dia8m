@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { MessageCircle, X, ArrowRight, RotateCw, MapPin, Clock, Phone, ArrowUpRight, Menu } from 'lucide-react';
+import { MessageCircle, X, ArrowRight, RotateCw, MapPin, Clock, Phone, ArrowUpRight, Menu, Filter } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface Product {
@@ -12,7 +12,7 @@ interface Product {
   image: string;
 }
 
-const CATEGORIES = ["Colección Día de la Mujer"];
+const CATEGORIES = ["Catálogo"];
 const NAV_LINKS = [...CATEGORIES, "Visítanos"];
 const BACKGROUND_VIDEOS = [
   "https://www.pexels.com/es-es/download/video/12745682/",
@@ -237,7 +237,12 @@ const CollectionCard: React.FC<CollectionCardProps> = ({ product }) => {
   };
 
   return (
-    <div
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      transition={{ duration: 0.4 }}
       className="relative w-[85vw] md:w-[400px] aspect-[3/4] cursor-pointer perspective-1000 group flex-shrink-0 snap-center md:snap-start"
       onClick={() => setIsFlipped(!isFlipped)}
     >
@@ -329,7 +334,7 @@ const CollectionCard: React.FC<CollectionCardProps> = ({ product }) => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -391,12 +396,23 @@ const CategorySection: React.FC<CategorySectionProps> = ({ group, isLast }) => {
         onScroll={handleScroll}
         className="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory px-6 md:px-12 pb-8 gap-6 md:gap-10"
       >
-        {group.items.map(product => (
-          <CollectionCard
-            key={product.id}
-            product={product}
-          />
-        ))}
+        <AnimatePresence mode='popLayout'>
+          {group.items.map(product => (
+            <CollectionCard
+              key={product.id}
+              product={product}
+            />
+          ))}
+          {group.items.length === 0 && (
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="w-full py-20 flex flex-col items-center justify-center text-white/40"
+            >
+              <Filter size={32} className="mb-4 opacity-50" />
+              <p className="font-sans text-sm font-light">No encontramos arreglos con estos filtros.</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
         {/* Spacer to ensure the last item doesn't stick to the right edge */}
         <div className="w-2 md:w-12 flex-shrink-0"></div>
       </div>
@@ -537,10 +553,28 @@ const VisitUsSection = () => {
   );
 };
 
+const FILTERS = [
+  { id: 'rosas', label: '🌹 Rosas', check: (p: Product) => p.name.toLowerCase().includes('rosa') || p.flowers.some(f => f.toLowerCase().includes('rosa')) },
+  { id: 'girasoles', label: '🌻 Girasoles', check: (p: Product) => p.name.toLowerCase().includes('girasol') || p.flowers.some(f => f.toLowerCase().includes('girasol')) },
+  { id: 'chocolates', label: '🍫 Chocolates', check: (p: Product) => p.name.toLowerCase().includes('chocolate') || p.name.toLowerCase().includes('ferrero') || p.flowers.some(f => f.toLowerCase().includes('ferrero')) },
+  { id: 'peluches', label: '🧸 Peluches', check: (p: Product) => p.name.toLowerCase().includes('peluche') || p.flowers.some(f => f.toLowerCase().includes('peluche')) },
+  { id: 'menos100', label: '💰 < $100k', check: (p: Product) => p.price < 100000 },
+  { id: 'premium', label: '💎 Premium', check: (p: Product) => p.price >= 150000 },
+];
+
 export default function App() {
   const [activeSection, setActiveSection] = useState(CATEGORIES[0]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+
+  const toggleFilter = (filterId: string) => {
+    setActiveFilters(prev =>
+      prev.includes(filterId)
+        ? prev.filter(f => f !== filterId)
+        : [...prev, filterId]
+    );
+  };
 
   // Background Video Carousel Logic
   useEffect(() => {
@@ -552,11 +586,25 @@ export default function App() {
 
   // Group products by category
   const groupedProducts = useMemo(() => {
+    // First, filter products based on active filters
+    let filteredProducts = products;
+
+    if (activeFilters.length > 0) {
+      filteredProducts = products.filter(product => {
+        // If multiple filters are active, product must match ALL of them (AND logic)
+        // Or you can change to OR logic by using .some()
+        return activeFilters.every(filterId => {
+          const filterDef = FILTERS.find(f => f.id === filterId);
+          return filterDef ? filterDef.check(product) : true;
+        });
+      });
+    }
+
     return CATEGORIES.map(category => ({
       category,
-      items: products.filter(p => p.category === category)
+      items: filteredProducts // ignoring specific category mapping since they are all "Colección Día de la Mujer" but we just want one unified list
     }));
-  }, []);
+  }, [activeFilters]);
 
   // Scroll Spy Logic
   useEffect(() => {
@@ -609,7 +657,7 @@ export default function App() {
       </div>
 
       {/* MOBILE HEADER (Sticky) */}
-      <nav className="md:hidden sticky top-0 z-40 bg-[#050505]/90 backdrop-blur-xl border-b border-white/5 px-6 py-5 flex justify-between items-center">
+      <nav className="md:hidden sticky top-0 z-50 bg-[#050505]/90 backdrop-blur-xl border-b border-white/5 px-6 py-5 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <span className="font-serif text-2xl tracking-widest text-white/90">AVA</span>
           <span className="font-sans text-[8px] uppercase tracking-[0.2em] text-white/40 border-l border-white/10 pl-3">Catálogo Día de la Mujer</span>
@@ -722,14 +770,52 @@ export default function App() {
       </aside>
 
       {/* MAIN CONTENT AREA */}
-      <main className="flex-1 w-full overflow-hidden">
-        {groupedProducts.map((group, index) => (
-          <CategorySection
-            key={group.category}
-            group={group}
-            isLast={false}
-          />
-        ))}
+      <main className="flex-1 w-full overflow-hidden flex flex-col relative">
+
+        {/* Filter Bar */}
+        <div className="w-full pt-6 md:pt-32 md:px-12 z-30 sticky top-[72px] md:relative md:top-0 bg-[#050505]/95 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none border-b border-white/5 md:border-none pb-4 md:pb-0">
+          <div className="flex items-center gap-2.5 md:gap-3 overflow-x-auto hide-scrollbar snap-x snap-mandatory px-6 md:px-0">
+            <span className="font-sans text-[10px] uppercase tracking-widest text-white/40 mr-1 md:mr-2 flex-shrink-0 flex items-center gap-2 snap-start">
+              <Filter size={12} /> <span className="hidden sm:inline">Filtros:</span>
+            </span>
+            {FILTERS.map(filter => {
+              const isActive = activeFilters.includes(filter.id);
+              return (
+                <button
+                  key={filter.id}
+                  onClick={() => toggleFilter(filter.id)}
+                  className={`flex-shrink-0 snap-start px-4 md:px-5 py-2 md:py-2.5 rounded-full font-sans text-[11px] md:text-sm tracking-wide transition-all duration-300 border shadow-sm active:scale-95 ${isActive
+                    ? 'bg-white text-black border-white font-medium'
+                    : 'bg-white/[0.03] text-white/70 border-white/10 active:bg-white/10'
+                    }`}
+                >
+                  {filter.label}
+                </button>
+              );
+            })}
+
+            {activeFilters.length > 0 && (
+              <button
+                onClick={() => setActiveFilters([])}
+                className="flex-shrink-0 snap-start px-3 py-2 font-sans text-[11px] md:text-xs text-white/40 hover:text-white transition-colors uppercase tracking-wider"
+              >
+                Limpiar
+              </button>
+            )}
+            {/* Right padding for scroll area in mobile */}
+            <div className="w-2 flex-shrink-0 md:hidden"></div>
+          </div>
+        </div>
+
+        <div className="flex-1 pt-6 md:pt-0">
+          {groupedProducts.map((group, index) => (
+            <CategorySection
+              key={group.category}
+              group={group}
+              isLast={false}
+            />
+          ))}
+        </div>
 
         <VisitUsSection />
 
