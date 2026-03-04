@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const sourceDir = '/Users/juan/Downloads/dia de la mujer 2';
+const sourceDir = '/Users/juan/Downloads/iloveimg-compressed';
 const targetDir = path.join(process.cwd(), 'public', 'products');
 
 if (!fs.existsSync(targetDir)) {

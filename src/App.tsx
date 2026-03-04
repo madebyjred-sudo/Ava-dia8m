@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { MessageCircle, X, ArrowRight, RotateCw, MapPin, Clock, Phone, ArrowUpRight, Menu, Filter } from 'lucide-react';
+import { MessageCircle, X, ArrowRight, RotateCw, MapPin, Clock, Phone, ArrowUpRight, Menu, Filter, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface Product {
@@ -567,6 +567,7 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
 
   const toggleFilter = (filterId: string) => {
     setActiveFilters(prev =>
@@ -772,11 +773,13 @@ export default function App() {
       {/* MAIN CONTENT AREA */}
       <main className="flex-1 w-full overflow-hidden flex flex-col relative">
 
-        {/* Filter Bar */}
-        <div className="w-full pt-6 md:pt-32 md:px-12 z-30 sticky top-[72px] md:relative md:top-0 bg-[#050505]/95 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none border-b border-white/5 md:border-none pb-4 md:pb-0">
-          <div className="flex items-center gap-2.5 md:gap-3 overflow-x-auto hide-scrollbar snap-x snap-mandatory px-6 md:px-0">
-            <span className="font-sans text-[10px] uppercase tracking-widest text-white/40 mr-1 md:mr-2 flex-shrink-0 flex items-center gap-2 snap-start">
-              <Filter size={12} /> <span className="hidden sm:inline">Filtros:</span>
+        {/* Filter Section (Optimized for Mobile) */}
+        <div className="w-full pt-8 md:pt-32 px-6 md:px-12 z-20">
+
+          {/* Desktop Filter Bar (Hidden on Mobile) */}
+          <div className="hidden md:flex items-center gap-3 pb-8">
+            <span className="font-sans text-[10px] uppercase tracking-widest text-white/40 mr-2 flex-shrink-0 flex items-center gap-2">
+              <Filter size={12} /> Filtros:
             </span>
             {FILTERS.map(filter => {
               const isActive = activeFilters.includes(filter.id);
@@ -784,9 +787,9 @@ export default function App() {
                 <button
                   key={filter.id}
                   onClick={() => toggleFilter(filter.id)}
-                  className={`flex-shrink-0 snap-start px-4 md:px-5 py-2 md:py-2.5 rounded-full font-sans text-[11px] md:text-sm tracking-wide transition-all duration-300 border shadow-sm active:scale-95 ${isActive
+                  className={`flex-shrink-0 px-5 py-2.5 rounded-full font-sans text-sm tracking-wide transition-colors duration-200 border ${isActive
                     ? 'bg-white text-black border-white font-medium'
-                    : 'bg-white/[0.03] text-white/70 border-white/10 active:bg-white/10'
+                    : 'bg-white/[0.02] text-white/70 border-white/10 hover:bg-white/5'
                     }`}
                 >
                   {filter.label}
@@ -797,17 +800,75 @@ export default function App() {
             {activeFilters.length > 0 && (
               <button
                 onClick={() => setActiveFilters([])}
-                className="flex-shrink-0 snap-start px-3 py-2 font-sans text-[11px] md:text-xs text-white/40 hover:text-white transition-colors uppercase tracking-wider"
+                className="flex-shrink-0 px-3 py-2 font-sans text-xs text-white/40 hover:text-white transition-colors uppercase tracking-wider"
               >
                 Limpiar
               </button>
             )}
-            {/* Right padding for scroll area in mobile */}
-            <div className="w-2 flex-shrink-0 md:hidden"></div>
+          </div>
+
+          {/* Mobile Filter Accordion (Hidden on Desktop) */}
+          <div className="md:hidden mb-6">
+            <button
+              onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
+              className="w-full bg-[#111] border border-white/10 rounded-xl px-5 py-4 flex items-center justify-between active:bg-[#1a1a1a] transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <Filter size={16} className={activeFilters.length > 0 ? "text-white" : "text-white/50"} />
+                <span className={`font-sans text-sm tracking-wider ${activeFilters.length > 0 ? "text-white font-medium" : "text-white/70"}`}>
+                  {activeFilters.length > 0 ? `Filtros Aplicados (${activeFilters.length})` : "Filtrar Arreglos"}
+                </span>
+              </div>
+              <ChevronDown
+                size={16}
+                className={`text-white/50 transition-transform duration-300 ${isFilterMenuOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            <AnimatePresence>
+              {isFilterMenuOpen && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <div className="pt-4 grid grid-cols-2 gap-3">
+                    {FILTERS.map(filter => {
+                      const isActive = activeFilters.includes(filter.id);
+                      return (
+                        <button
+                          key={filter.id}
+                          onClick={() => toggleFilter(filter.id)}
+                          className={`w-full py-3 px-3 rounded-lg text-left font-sans text-xs tracking-wide transition-colors ${isActive
+                            ? 'bg-white text-black font-medium'
+                            : 'bg-[#111] text-white/70 border border-white/5 active:bg-[#222]'
+                            }`}
+                        >
+                          {filter.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {activeFilters.length > 0 && (
+                    <button
+                      onClick={() => {
+                        setActiveFilters([]);
+                        setIsFilterMenuOpen(false);
+                      }}
+                      className="w-full mt-4 py-3 font-sans text-[11px] text-white/50 uppercase tracking-widest active:text-white border border-white/5 rounded-lg active:bg-[#111]"
+                    >
+                      Limpiar Filtros
+                    </button>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
-        <div className="flex-1 pt-6 md:pt-0">
+        <div className="flex-1">
           {groupedProducts.map((group, index) => (
             <CategorySection
               key={group.category}
