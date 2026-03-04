@@ -225,7 +225,7 @@ interface CollectionCardProps {
   product: Product;
 }
 
-const CollectionCard: React.FC<CollectionCardProps> = ({ product }) => {
+const CollectionCard: React.FC<CollectionCardProps> = React.memo(({ product }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleWhatsApp = (e: React.MouseEvent) => {
@@ -239,35 +239,38 @@ const CollectionCard: React.FC<CollectionCardProps> = ({ product }) => {
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.4 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.3 }}
       className="relative w-[85vw] md:w-[400px] aspect-[3/4] cursor-pointer perspective-1000 group flex-shrink-0 snap-center md:snap-start"
       onClick={() => setIsFlipped(!isFlipped)}
+      style={{ WebkitTapHighlightColor: 'transparent' }}
     >
-      {/* Hover Lift Wrapper */}
-      <div className="w-full h-full transition-all duration-700 ease-out md:group-hover:-translate-y-3 md:group-hover:scale-[1.02]">
-        {/* Container for 3D flip */}
+      {/* Hover Lift Wrapper - Hardware Accelerated */}
+      <div className="w-full h-full transition-transform duration-500 ease-out transform-gpu md:group-hover:-translate-y-3 md:group-hover:scale-[1.02] will-change-transform">
+        {/* Container for 3D flip - Optimized */}
         <div
-          className={`w-full h-full transition-transform duration-[1.2s] ease-[cubic-bezier(0.23,1,0.32,1)] transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}
+          className={`w-full h-full transition-transform duration-[0.8s] ease-[cubic-bezier(0.23,1,0.32,1)] transform-style-3d transform-gpu will-change-transform ${isFlipped ? 'rotate-y-180' : ''}`}
         >
           {/* FRONT - Modern Rounded Corners */}
-          <div className="absolute inset-0 backface-hidden bg-[#0a0a0a] rounded-3xl overflow-hidden border border-white/10 shadow-2xl transition-all duration-700 md:group-hover:border-white/20 md:group-hover:shadow-[0_40px_80px_rgba(0,0,0,0.8)]">
+          <div className="absolute inset-0 backface-hidden bg-[#0a0a0a] rounded-3xl overflow-hidden border border-white/10 shadow-xl transition-shadow duration-500 md:group-hover:border-white/20 md:group-hover:shadow-[0_40px_80px_rgba(0,0,0,0.8)]">
             <img
               src={product.image}
               alt={product.name}
-              className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-105"
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full object-cover opacity-80 md:group-hover:opacity-100 transition-transform duration-700 transform-gpu md:group-hover:scale-105 will-change-transform"
               referrerPolicy="no-referrer"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent pointer-events-none"></div>
 
             <div className="absolute bottom-0 left-0 w-full p-8 flex flex-col items-center text-center">
               <h3 className="font-serif text-3xl md:text-4xl font-light tracking-wide text-white mb-3">
                 {product.name}
               </h3>
-              <div className="w-0 group-hover:w-12 h-[1px] bg-white/50 transition-all duration-700 ease-out mb-4"></div>
-              <div className="flex items-center gap-2 text-white/50 group-hover:text-white/90 transition-colors duration-500">
+              <div className="w-0 md:group-hover:w-12 h-[1px] bg-white/50 transition-all duration-500 ease-out mb-4"></div>
+              <div className="flex items-center gap-2 text-white/60 md:group-hover:text-white/90 transition-colors duration-300">
                 <RotateCw size={10} strokeWidth={1.5} />
                 <span className="font-sans text-[9px] uppercase tracking-[0.3em]">
                   Tocar para detalles
@@ -277,19 +280,21 @@ const CollectionCard: React.FC<CollectionCardProps> = ({ product }) => {
           </div>
 
           {/* BACK - 3D Floating Modal Panel */}
-          <div className="absolute inset-0 backface-hidden rotate-y-180 rounded-3xl transform-style-3d transition-all duration-700 md:group-hover:shadow-[0_40px_80px_rgba(0,0,0,0.8)]">
+          <div className="absolute inset-0 backface-hidden rotate-y-180 rounded-3xl transform-style-3d bg-[#050505] border border-white/10 shadow-xl">
 
-            {/* Aesthetic Back Background */}
-            <div className="absolute inset-0 rounded-3xl overflow-hidden bg-[#050505] border border-white/10 shadow-2xl transition-all duration-700 md:group-hover:border-white/20">
+            {/* Aesthetic Back Background - Static to save GPU */}
+            <div className="absolute inset-0 rounded-3xl overflow-hidden opacity-30">
               <img
                 src={product.image}
                 alt=""
-                className="absolute inset-0 w-full h-full object-cover opacity-20 blur-2xl scale-125 pointer-events-none"
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 w-full h-full object-cover blur-2xl scale-125 pointer-events-none"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/90 pointer-events-none"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/90 pointer-events-none"></div>
               {/* Subtle AVA watermark */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
+              <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
                 <span className="font-serif text-8xl tracking-widest">AVA</span>
               </div>
             </div>
@@ -297,17 +302,17 @@ const CollectionCard: React.FC<CollectionCardProps> = ({ product }) => {
             {/* Floating Modal Panel Wrapper */}
             <div
               className="absolute inset-0 transform-style-3d pointer-events-none"
-              style={{ transform: 'translateZ(60px)' }}
+              style={{ transform: 'translateZ(40px)' }}
             >
               <div
-                className={`absolute inset-4 md:inset-5 bg-[#0a0a0a]/60 backdrop-blur-2xl rounded-2xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.8)] p-6 flex flex-col items-center text-center justify-center backface-hidden transition-all duration-1000 pointer-events-auto ${isFlipped ? 'opacity-100 translate-y-0 delay-[400ms] ease-[cubic-bezier(0.23,1,0.32,1)]' : 'opacity-0 translate-y-8'}`}
+                className={`absolute inset-4 md:inset-5 bg-[#0a0a0a]/80 backdrop-blur-md rounded-2xl border border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.8)] p-6 flex flex-col items-center text-center justify-center backface-hidden transition-all duration-700 pointer-events-auto transform-gpu ${isFlipped ? 'opacity-100 translate-y-0 delay-[200ms]' : 'opacity-0 translate-y-4'}`}
               >
                 <h3 className="font-serif text-3xl md:text-4xl font-light text-white mb-6 tracking-wide mt-4">{product.name}</h3>
                 <div className="w-8 h-[1px] bg-white/20 mb-auto"></div>
 
-                <div className="w-full bg-white/[0.02] rounded-2xl p-6 border border-white/5 shadow-inner">
-                  <h4 className="font-sans text-[9px] md:text-[10px] uppercase tracking-[0.4em] text-white/50 mb-4">Composición</h4>
-                  <ul className="font-sans text-xs md:text-sm text-white/90 space-y-2.5 font-light tracking-wider">
+                <div className="w-full bg-white/[0.02] rounded-2xl p-5 md:p-6 border border-white/5 shadow-inner">
+                  <h4 className="font-sans text-[9px] md:text-[10px] uppercase tracking-[0.4em] text-white/50 mb-3 md:mb-4">Composición</h4>
+                  <ul className="font-sans text-xs md:text-sm text-white/90 space-y-2 md:space-y-2.5 font-light tracking-wider">
                     {product.flowers.map((flower, idx) => (
                       <li key={idx} className="flex items-center justify-center gap-2">
                         <span className="w-1 h-1 rounded-full bg-white/30"></span>
@@ -317,16 +322,17 @@ const CollectionCard: React.FC<CollectionCardProps> = ({ product }) => {
                   </ul>
                 </div>
 
-                <div className="mt-auto mb-8">
+                <div className="mt-auto mb-6 md:mb-8">
                   <span className="font-sans font-light text-2xl md:text-3xl tracking-widest text-white">${new Intl.NumberFormat('es-CO').format(product.price)}</span>
                   <span className="font-sans text-[10px] text-white/40 ml-2 tracking-widest uppercase">COP</span>
                 </div>
 
                 <button
                   onClick={handleWhatsApp}
-                  className="w-full bg-white text-black hover:bg-gray-200 font-sans text-[9px] md:text-[10px] uppercase tracking-[0.2em] py-3.5 px-4 rounded-full transition-all duration-500 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] group"
+                  className="w-full bg-white text-black font-sans text-[9px] md:text-[10px] uppercase tracking-[0.2em] py-3.5 px-4 rounded-full flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform duration-200"
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
                 >
-                  <MessageCircle size={14} strokeWidth={1.5} className="group-hover:scale-110 transition-transform duration-500" />
+                  <MessageCircle size={14} strokeWidth={1.5} />
                   <span className="font-medium">Comprar por WhatsApp</span>
                 </button>
               </div>
@@ -336,7 +342,7 @@ const CollectionCard: React.FC<CollectionCardProps> = ({ product }) => {
       </div>
     </motion.div>
   );
-};
+});
 
 interface CategorySectionProps {
   group: {
@@ -390,11 +396,12 @@ const CategorySection: React.FC<CategorySectionProps> = ({ group, isLast }) => {
         </div>
       </div>
 
-      {/* Horizontal Scroll Container */}
+      {/* Horizontal Scroll Container - Hardware Accelerated Scroll */}
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory px-6 md:px-12 pb-8 gap-6 md:gap-10"
+        className="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory px-6 md:px-12 pb-8 gap-6 md:gap-10 overscroll-x-contain"
+        style={{ WebkitOverflowScrolling: 'touch' }}
       >
         <AnimatePresence mode='popLayout'>
           {group.items.map(product => (
@@ -493,12 +500,13 @@ const VisitUsSection = () => {
 
           {/* Map Column */}
           <div className="lg:col-span-7 relative min-h-[400px] lg:min-h-full group cursor-pointer overflow-hidden" onClick={() => window.open('https://maps.app.goo.gl/ba4biTpFPPoAypvK6', '_blank')}>
-            {/* Map Iframe */}
+            {/* Map Iframe - Optimized */}
             <iframe
               src="https://maps.google.com/maps?q=7.0633,-73.0911&t=&z=12&ie=UTF8&iwloc=&output=embed"
-              className="absolute inset-0 w-full h-full pointer-events-none scale-110"
-              style={{ filter: 'grayscale(100%) invert(100%) contrast(85%) opacity(0.8)' }}
+              className="absolute inset-0 w-full h-full scale-110 md:pointer-events-auto"
+              style={{ filter: 'grayscale(100%) invert(100%) contrast(85%) opacity(0.8)', pointerEvents: 'none' }}
               loading="lazy"
+              title="AVA Flores Ubicación"
               referrerPolicy="no-referrer-when-downgrade"
             ></iframe>
 
@@ -639,22 +647,26 @@ export default function App() {
   return (
     <div className="min-h-screen text-white selection:bg-white/20 font-sans flex flex-col md:flex-row relative">
 
-      {/* BACKGROUND VIDEO CAROUSEL */}
+      {/* BACKGROUND VIDEO CAROUSEL - Optimized for Mobile */}
       <div className="fixed inset-0 z-[-1] overflow-hidden bg-[#050505]">
         {BACKGROUND_VIDEOS.map((src, index) => (
-          <video
-            key={src}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className={`absolute inset-0 w-full h-full object-cover blur-xl scale-110 transition-opacity duration-[3000ms] ease-in-out ${index === currentVideoIndex ? 'opacity-65' : 'opacity-0'
-              }`}
-          >
-            <source src={src} type="video/mp4" />
-          </video>
+          // Conditionally render only the active video and the next one to save memory/battery
+          (index === currentVideoIndex || index === (currentVideoIndex + 1) % BACKGROUND_VIDEOS.length) && (
+            <video
+              key={src}
+              autoPlay={index === currentVideoIndex}
+              loop
+              muted
+              playsInline
+              preload="none"
+              className={`absolute inset-0 w-full h-full object-cover blur-xl scale-110 transition-opacity duration-[2000ms] ease-in-out transform-gpu will-change-opacity ${index === currentVideoIndex ? 'opacity-65' : 'opacity-0'
+                }`}
+            >
+              <source src={src} type="video/mp4" />
+            </video>
+          )
         ))}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/70 to-[#050505]/90"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/80 to-[#050505]/95 pointer-events-none"></div>
       </div>
 
       {/* MOBILE HEADER (Sticky) */}
