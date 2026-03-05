@@ -356,6 +356,92 @@ const CategorySection: React.FC<CategorySectionProps> = ({ group, isLast }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
+  // Drag to scroll state refs
+  const isDragging = React.useRef(false);
+  const startX = React.useRef(0);
+  const scrollLeft = React.useRef(0);
+  const hasDragged = React.useRef(false);
+
+  // Convert vertical scroll to horizontal scroll
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const onWheel = (e: WheelEvent) => {
+      // Only handle vertical scrolling
+      if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+      if (e.deltaY === 0) return;
+
+      const maxScrollLeft = el.scrollWidth - el.clientWidth;
+      const isAtStart = el.scrollLeft <= 0;
+      const isAtEnd = Math.ceil(el.scrollLeft) >= maxScrollLeft - 1;
+
+      // Let the page scroll if we're at the edges and trying to scroll further
+      if ((e.deltaY < 0 && isAtStart) || (e.deltaY > 0 && isAtEnd)) {
+        return;
+      }
+
+      e.preventDefault();
+      el.scrollBy({
+        left: e.deltaY,
+        behavior: 'auto'
+      });
+    };
+
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, []);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!scrollRef.current) return;
+    isDragging.current = true;
+    hasDragged.current = false;
+    startX.current = e.pageX - scrollRef.current.offsetLeft;
+    scrollLeft.current = scrollRef.current.scrollLeft;
+    scrollRef.current.style.cursor = 'grabbing';
+    // Temporarily disable scroll snapping while dragging for smoother movement
+    scrollRef.current.style.scrollSnapType = 'none';
+  };
+
+  const handleMouseLeave = () => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    if (scrollRef.current) {
+      scrollRef.current.style.cursor = 'grab';
+      scrollRef.current.style.scrollSnapType = 'x mandatory';
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    if (scrollRef.current) {
+      scrollRef.current.style.cursor = 'grab';
+      scrollRef.current.style.scrollSnapType = 'x mandatory';
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX.current) * 2; // Scroll speed multiplier
+
+    if (Math.abs(walk) > 5) {
+      hasDragged.current = true;
+    }
+
+    scrollRef.current.scrollLeft = scrollLeft.current - walk;
+  };
+
+  // Intercept click events to prevent clicking cards when dragging
+  const handleClickCapture = (e: React.MouseEvent) => {
+    if (hasDragged.current) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  };
+
   const handleScroll = () => {
     if (!scrollRef.current) return;
     const container = scrollRef.current;
@@ -400,7 +486,12 @@ const CategorySection: React.FC<CategorySectionProps> = ({ group, isLast }) => {
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory px-6 md:px-12 pb-8 gap-6 md:gap-10 overscroll-x-contain"
+        onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseLeave}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
+        onClickCapture={handleClickCapture}
+        className="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory px-6 md:px-12 pb-8 gap-6 md:gap-10 overscroll-x-contain cursor-grab select-none"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
         <AnimatePresence mode='popLayout'>
