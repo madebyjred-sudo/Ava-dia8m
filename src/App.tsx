@@ -670,7 +670,7 @@ const VisitUsSection = () => {
                 </div>
                 <div>
                   <h4 className="font-sans text-[10px] uppercase tracking-[0.2em] text-white/40 mb-2">Contacto</h4>
-                  <p className="font-sans text-sm text-white/80 font-light">+57 300 000 0000</p>
+                  <p className="font-sans text-sm text-white/80 font-light">+57 315 2838537</p>
                 </div>
               </div>
             </div>
