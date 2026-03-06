@@ -1,5 +1,63 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { MessageCircle, X, ArrowRight, RotateCw, MapPin, Clock, Phone, ArrowUpRight, Menu, Filter, ChevronDown } from 'lucide-react';
+import { MessageCircle, X, ArrowRight, RotateCw, MapPin, Clock, Phone, ArrowUpRight, Menu, Filter, ChevronDown, Gem } from 'lucide-react';
+
+// --- Custom Icons ---
+const RoseIcon = ({ className = "" }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M12 22v-6" />
+    <path d="M8 18c-1.5-2.5-3.5-3.5-3.5-6 0-2.5 2-4 4-5 2-1 3.5.5 3.5.5s1.5-1.5 3.5-.5c2 1 4 2.5 4 5 0 2.5-2 3.5-3.5 6-1.5 2.5-3.5 3.5-4 4-.5-.5-2.5-1.5-4-4z" />
+    <path d="M12 12c-2.5-2.5-2.5-5.5 0-7 2.5 1.5 2.5 4.5 0 7z" />
+    <path d="M12 12c-1-1.5-1-3 0-4 1 1 1 2.5 0 4z" />
+    <path d="M14 18l1.5 2" />
+    <path d="M10 18l-1.5 2" />
+  </svg>
+);
+
+const SunflowerIcon = ({ className = "" }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <circle cx="12" cy="12" r="3" />
+    <path d="M12 2v3" />
+    <path d="M12 19v3" />
+    <path d="M22 12h-3" />
+    <path d="M5 12H2" />
+    <path d="M19.07 4.93l-2.12 2.12" />
+    <path d="M7.05 16.95l-2.12 2.12" />
+    <path d="M19.07 19.07l-2.12-2.12" />
+    <path d="M7.05 7.05L4.93 4.93" />
+    <path d="M15 12a3 3 0 0 1-6 0" />
+    <path d="M12 22v-2" />
+    <path d="M10 20c-1.5-1.5-1.5-3 0-5" />
+    <path d="M14 20c1.5-1.5 1.5-3 0-5" />
+  </svg>
+);
+
+const ChocolateIcon = ({ className = "" }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M19 6H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2Z" />
+    <path d="M3 10h18" />
+    <path d="M3 14h18" />
+    <path d="M8 6v12" />
+    <path d="M16 6v12" />
+  </svg>
+);
+
+const TeddyIcon = ({ className = "" }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M9 11a4 4 0 1 0 6 0 4 4 0 0 0-6 0z" />
+    <path d="M5.5 8.5A2.5 2.5 0 0 1 8 6a4 4 0 0 1 8 0 2.5 2.5 0 0 1 2.5 2.5" />
+    <path d="M16.5 14a3.5 3.5 0 0 1 3.5 3.5A2.5 2.5 0 0 1 17.5 20h-11a2.5 2.5 0 0 1-2.5-2.5A3.5 3.5 0 0 1 7.5 14" />
+    <circle cx="9" cy="10" r="1" fill="currentColor" />
+    <circle cx="15" cy="10" r="1" fill="currentColor" />
+    <path d="M12 12v1" />
+  </svg>
+);
+
+const TagIcon = ({ className = "" }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+    <line x1="7" y1="7" x2="7.01" y2="7" />
+  </svg>
+);
 import { motion, AnimatePresence } from 'motion/react';
 
 interface Product {
@@ -21,113 +79,35 @@ const BACKGROUND_VIDEOS = [
 ];
 
 const products: Product[] = [
+  // 1. ANCHOR / PREMIUM: High price to anchor the perceived value of the boutique
   {
-    id: 11,
-    name: "Rosas Decoradas",
+    id: 24,
+    name: "72 Rosas y Chocolates",
     category: "Colección Día de la Mujer",
     description: "",
-    flowers: ["3 rosas decoradas"],
-    price: 25000,
-    image: "/products/product-11.png"
+    flowers: ["72 rosas premium", "Chocolates Ferrero"],
+    price: 380000,
+    image: "/products/product-24.png"
   },
   {
-    id: 14,
-    name: "Girasol Decorado",
+    id: 13,
+    name: "Girasoles, Rosas y Globo",
     category: "Colección Día de la Mujer",
     description: "",
-    flowers: ["1 girasol decorado"],
-    price: 30000,
-    image: "/products/product-14.png"
+    flowers: ["8 girasoles y 12 rosas", "Globo personalizado"],
+    price: 280000,
+    image: "/products/product-13.png"
   },
+
+  // 2. MID-TIER BESTSELLERS: The most attractive offers after seeing $380k
   {
-    id: 15,
-    name: "Girasol y Rosas con Follaje",
+    id: 6,
+    name: "Rosas y Varas de Lirio",
     category: "Colección Día de la Mujer",
     description: "",
-    flowers: ["1 girasol, 4 rosas y follaje"],
-    price: 50000,
-    image: "/products/product-15.png"
-  },
-  {
-    id: 16,
-    name: "Rosas y Girasoles",
-    category: "Colección Día de la Mujer",
-    description: "",
-    flowers: ["4 rosas, 2 girasoles y follaje"],
-    price: 65000,
-    image: "/products/product-16.png"
-  },
-  {
-    id: 17,
-    name: "Rosas con Follaje",
-    category: "Colección Día de la Mujer",
-    description: "",
-    flowers: ["9 rosas y follaje"],
-    price: 70000,
-    image: "/products/product-17.png"
-  },
-  {
-    id: 18,
-    name: "Girasol y Rosas",
-    category: "Colección Día de la Mujer",
-    description: "",
-    flowers: ["1 girasol y 6 rosas"],
-    price: 75000,
-    image: "/products/product-18.png"
-  },
-  {
-    id: 19,
-    name: "Ramillete Astromelias, Rosas y Lirios",
-    category: "Colección Día de la Mujer",
-    description: "",
-    flowers: ["Astromelias, rosas, lirios y follaje"],
-    price: 80000,
-    image: "/products/product-19.png"
-  },
-  {
-    id: 20,
-    name: "Ramillete de Girasoles",
-    category: "Colección Día de la Mujer",
-    description: "",
-    flowers: ["3 girasoles, yipso y eucalipto"],
-    price: 80000,
-    image: "/products/product-20.png"
-  },
-  {
-    id: 21,
-    name: "Rosas y Yipso",
-    category: "Colección Día de la Mujer",
-    description: "",
-    flowers: ["12 rosas y yipso"],
-    price: 85000,
-    image: "/products/product-21.png"
-  },
-  {
-    id: 22,
-    name: "Virgen, Chocolates y Sinvidio",
-    category: "Colección Día de la Mujer",
-    description: "",
-    flowers: ["Virgen mediana", "Ferrero x4", "Cymbidium"],
-    price: 90000,
-    image: "/products/product-22.png"
-  },
-  {
-    id: 1,
-    name: "Girasol y Rosas",
-    category: "Colección Día de la Mujer",
-    description: "",
-    flowers: ["1 girasol y 12 rosas"],
-    price: 100000,
-    image: "/products/product-1.png"
-  },
-  {
-    id: 2,
-    name: "Girasol y Rosas Edición II",
-    category: "Colección Día de la Mujer",
-    description: "",
-    flowers: ["1 girasol y 12 rosas"],
-    price: 100000,
-    image: "/products/product-2.png"
+    flowers: ["15 rosas y 3 varas de lirio"],
+    price: 150000,
+    image: "/products/product-6.png"
   },
   {
     id: 3,
@@ -139,67 +119,44 @@ const products: Product[] = [
     image: "/products/product-3.png"
   },
   {
-    id: 4,
-    name: "Arreglo Especial con Peluche",
+    id: 1,
+    name: "Girasol y Rosas",
     category: "Colección Día de la Mujer",
     description: "",
-    flowers: ["5 rosas y 1 girasol", "Ferrero x4", "Peluche 20cm"],
-    price: 120000,
-    image: "/products/product-4.png"
+    flowers: ["1 girasol y 12 rosas"],
+    price: 100000,
+    image: "/products/product-1.png"
+  },
+
+  // 3. ACCESSIBLE OPTIONS (Under 100k)
+  {
+    id: 21,
+    name: "Rosas y Yipso",
+    category: "Colección Día de la Mujer",
+    description: "",
+    flowers: ["12 rosas y yipso"],
+    price: 85000,
+    image: "/products/product-21.png"
   },
   {
-    id: 5,
-    name: "Arreglo de Rosas Elegante",
+    id: 20,
+    name: "Ramillete de Girasoles",
     category: "Colección Día de la Mujer",
     description: "",
-    flowers: ["12 rosas con follaje"],
-    price: 140000,
-    image: "/products/product-5.png"
+    flowers: ["3 girasoles, yipso y eucalipto"],
+    price: 80000,
+    image: "/products/product-20.png"
   },
+
+  // 4. ANOTHER HIGH TIER POP TO MAINTAIN EXCLUSIVITY
   {
-    id: 6,
-    name: "Rosas y Varas de Lirio",
+    id: 23,
+    name: "30 Girasoles",
     category: "Colección Día de la Mujer",
     description: "",
-    flowers: ["15 rosas y 3 varas de lirio"],
-    price: 150000,
-    image: "/products/product-6.png"
-  },
-  {
-    id: 7,
-    name: "Rosas con Mensaje",
-    category: "Colección Día de la Mujer",
-    description: "",
-    flowers: ["24 rosas", "Mensaje personalizado"],
-    price: 150000,
-    image: "/products/product-7.png"
-  },
-  {
-    id: 8,
-    name: "Arreglo de Rosas Premium",
-    category: "Colección Día de la Mujer",
-    description: "",
-    flowers: ["24 rosas"],
-    price: 160000,
-    image: "/products/product-8.png"
-  },
-  {
-    id: 9,
-    name: "Rosas y Fresas Achocolatadas",
-    category: "Colección Día de la Mujer",
-    description: "",
-    flowers: ["24 rosas", "6 fresas cubiertas de chocolate"],
-    price: 190000,
-    image: "/products/product-9.png"
-  },
-  {
-    id: 10,
-    name: "Girasoles y Follaje",
-    category: "Colección Día de la Mujer",
-    description: "",
-    flowers: ["10 girasoles y follaje"],
-    price: 200000,
-    image: "/products/product-10.png"
+    flowers: ["30 girasoles y follaje premium"],
+    price: 350000,
+    image: "/products/product-23.png"
   },
   {
     id: 12,
@@ -211,13 +168,143 @@ const products: Product[] = [
     image: "/products/product-12.png"
   },
   {
-    id: 13,
-    name: "Girasoles, Rosas y Globo",
+    id: 10,
+    name: "Girasoles y Follaje",
     category: "Colección Día de la Mujer",
     description: "",
-    flowers: ["8 girasoles y 12 rosas", "Globo personalizado"],
-    price: 280000,
-    image: "/products/product-13.png"
+    flowers: ["10 girasoles y follaje"],
+    price: 200000,
+    image: "/products/product-10.png"
+  },
+
+  // 5. REMAINING BESTSELLERS
+  {
+    id: 4,
+    name: "Arreglo Especial con Peluche",
+    category: "Colección Día de la Mujer",
+    description: "",
+    flowers: ["5 rosas y 1 girasol", "Ferrero x4", "Peluche 20cm"],
+    price: 120000,
+    image: "/products/product-4.png"
+  },
+  {
+    id: 9,
+    name: "Rosas y Fresas Achocolatadas",
+    category: "Colección Día de la Mujer",
+    description: "",
+    flowers: ["24 rosas", "6 fresas cubiertas de chocolate"],
+    price: 190000,
+    image: "/products/product-9.png"
+  },
+  {
+    id: 8,
+    name: "Arreglo de Rosas Premium",
+    category: "Colección Día de la Mujer",
+    description: "",
+    flowers: ["24 rosas"],
+    price: 160000,
+    image: "/products/product-8.png"
+  },
+  {
+    id: 7,
+    name: "Rosas con Mensaje",
+    category: "Colección Día de la Mujer",
+    description: "",
+    flowers: ["24 rosas", "Mensaje personalizado"],
+    price: 150000,
+    image: "/products/product-7.png"
+  },
+  {
+    id: 5,
+    name: "Arreglo de Rosas Elegante",
+    category: "Colección Día de la Mujer",
+    description: "",
+    flowers: ["12 rosas con follaje"],
+    price: 140000,
+    image: "/products/product-5.png"
+  },
+  {
+    id: 2,
+    name: "Girasol y Rosas Edición II",
+    category: "Colección Día de la Mujer",
+    description: "",
+    flowers: ["1 girasol y 12 rosas"],
+    price: 100000,
+    image: "/products/product-2.png"
+  },
+
+  // 6. LOWEST PRICE ENTRY LEVEL
+  {
+    id: 22,
+    name: "Virgen, Chocolates y Sinvidio",
+    category: "Colección Día de la Mujer",
+    description: "",
+    flowers: ["Virgen mediana", "Ferrero x4", "Cymbidium"],
+    price: 90000,
+    image: "/products/product-22.png"
+  },
+  {
+    id: 19,
+    name: "Ramillete Astromelias, Rosas y Lirios",
+    category: "Colección Día de la Mujer",
+    description: "",
+    flowers: ["Astromelias, rosas, lirios y follaje"],
+    price: 80000,
+    image: "/products/product-19.png"
+  },
+  {
+    id: 18,
+    name: "Girasol y Rosas",
+    category: "Colección Día de la Mujer",
+    description: "",
+    flowers: ["1 girasol y 6 rosas"],
+    price: 75000,
+    image: "/products/product-18.png"
+  },
+  {
+    id: 17,
+    name: "Rosas con Follaje",
+    category: "Colección Día de la Mujer",
+    description: "",
+    flowers: ["9 rosas y follaje"],
+    price: 70000,
+    image: "/products/product-17.png"
+  },
+  {
+    id: 16,
+    name: "Rosas y Girasoles",
+    category: "Colección Día de la Mujer",
+    description: "",
+    flowers: ["4 rosas, 2 girasoles y follaje"],
+    price: 65000,
+    image: "/products/product-16.png"
+  },
+  {
+    id: 15,
+    name: "Girasol y Rosas con Follaje",
+    category: "Colección Día de la Mujer",
+    description: "",
+    flowers: ["1 girasol, 4 rosas y follaje"],
+    price: 50000,
+    image: "/products/product-15.png"
+  },
+  {
+    id: 14,
+    name: "Girasol Decorado",
+    category: "Colección Día de la Mujer",
+    description: "",
+    flowers: ["1 girasol decorado"],
+    price: 30000,
+    image: "/products/product-14.png"
+  },
+  {
+    id: 11,
+    name: "Rosas Decoradas",
+    category: "Colección Día de la Mujer",
+    description: "",
+    flowers: ["3 rosas decoradas"],
+    price: 25000,
+    image: "/products/product-11.png"
   }
 ];
 
@@ -653,12 +740,12 @@ const VisitUsSection = () => {
 };
 
 const FILTERS = [
-  { id: 'rosas', label: '🌹 Rosas', check: (p: Product) => p.name.toLowerCase().includes('rosa') || p.flowers.some(f => f.toLowerCase().includes('rosa')) },
-  { id: 'girasoles', label: '🌻 Girasoles', check: (p: Product) => p.name.toLowerCase().includes('girasol') || p.flowers.some(f => f.toLowerCase().includes('girasol')) },
-  { id: 'chocolates', label: '🍫 Chocolates', check: (p: Product) => p.name.toLowerCase().includes('chocolate') || p.name.toLowerCase().includes('ferrero') || p.flowers.some(f => f.toLowerCase().includes('ferrero')) },
-  { id: 'peluches', label: '🧸 Peluches', check: (p: Product) => p.name.toLowerCase().includes('peluche') || p.flowers.some(f => f.toLowerCase().includes('peluche')) },
-  { id: 'menos100', label: '💰 < $100k', check: (p: Product) => p.price < 100000 },
-  { id: 'premium', label: '💎 Premium', check: (p: Product) => p.price >= 150000 },
+  { id: 'rosas', label: 'Rosas', icon: <RoseIcon className="w-3 h-3 md:w-4 md:h-4 mr-1.5 opacity-80" />, check: (p: Product) => p.name.toLowerCase().includes('rosa') || p.flowers.some(f => f.toLowerCase().includes('rosa')) },
+  { id: 'girasoles', label: 'Girasoles', icon: <SunflowerIcon className="w-3 h-3 md:w-4 md:h-4 mr-1.5 opacity-80" />, check: (p: Product) => p.name.toLowerCase().includes('girasol') || p.flowers.some(f => f.toLowerCase().includes('girasol')) },
+  { id: 'chocolates', label: 'Chocolates', icon: <ChocolateIcon className="w-3 h-3 md:w-4 md:h-4 mr-1.5 opacity-80" />, check: (p: Product) => p.name.toLowerCase().includes('chocolate') || p.name.toLowerCase().includes('ferrero') || p.flowers.some(f => f.toLowerCase().includes('ferrero')) },
+  { id: 'peluches', label: 'Peluches', icon: <TeddyIcon className="w-3 h-3 md:w-4 md:h-4 mr-1.5 opacity-80" />, check: (p: Product) => p.name.toLowerCase().includes('peluche') || p.flowers.some(f => f.toLowerCase().includes('peluche')) },
+  { id: 'menos100', label: '< $100k', icon: <TagIcon className="w-3 h-3 md:w-4 md:h-4 mr-1.5 opacity-80" />, check: (p: Product) => p.price < 100000 },
+  { id: 'premium', label: 'Premium', icon: <Gem className="w-3 h-3 md:w-4 md:h-4 mr-1.5 opacity-80" />, check: (p: Product) => p.price >= 150000 },
 ];
 
 export default function App() {
@@ -890,11 +977,12 @@ export default function App() {
                 <button
                   key={filter.id}
                   onClick={() => toggleFilter(filter.id)}
-                  className={`flex-shrink-0 px-5 py-2.5 rounded-full font-sans text-sm tracking-wide transition-colors duration-200 border ${isActive
-                    ? 'bg-white text-black border-white font-medium'
-                    : 'bg-white/[0.02] text-white/70 border-white/10 hover:bg-white/5'
+                  className={`flex-shrink-0 flex items-center px-4 py-2.5 rounded-full font-sans text-xs md:text-sm tracking-wide transition-all duration-300 border ${isActive
+                    ? 'bg-white text-black border-white font-medium shadow-[0_0_15px_rgba(255,255,255,0.3)]'
+                    : 'bg-white/[0.02] text-white/70 border-white/10 hover:bg-white/10'
                     }`}
                 >
+                  {filter.icon}
                   {filter.label}
                 </button>
               );
@@ -944,11 +1032,12 @@ export default function App() {
                         <button
                           key={filter.id}
                           onClick={() => toggleFilter(filter.id)}
-                          className={`w-full py-3 px-3 rounded-lg text-left font-sans text-xs tracking-wide transition-colors ${isActive
+                          className={`w-full flex items-center py-3 px-3 rounded-lg text-left font-sans text-xs tracking-wide transition-colors ${isActive
                             ? 'bg-white text-black font-medium'
                             : 'bg-[#111] text-white/70 border border-white/5 active:bg-[#222]'
                             }`}
                         >
+                          {filter.icon}
                           {filter.label}
                         </button>
                       );
